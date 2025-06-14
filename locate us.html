@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vida e Caffè Branches</title>
+  <style>
+    body, html {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+    header {
+      background-color: #111;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+    #container {
+      display: flex;
+      height: calc(100vh - 70px);
+    }
+    #branch-list {
+      width: 300px;
+      overflow-y: auto;
+      padding: 20px;
+      background-color: #f1f1f1;
+      border-right: 1px solid #ddd;
+    }
+    #branch-list h3 {
+      margin-top: 0;
+    }
+    .branch-item {
+      padding: 10px;
+      margin-bottom: 10px;
+      background-color: #fff;
+      border-radius: 6px;
+      cursor: pointer;
+      border: 1px solid #ddd;
+    }
+    .branch-item:hover {
+      background-color: #eaeaea;
+    }
+    #map {
+      flex: 1;
+    }
+    nav a{
+        color: #fff; 
+        text-decoration: none;  
+        font-weight: bold; 
+        }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Our Branches - Vida e Caffè</h1>
+   <nav>
+   <a href="Caffe` vivo.html"> Home</a> 
+   <a href="Menu bar.html"> Menu</a>
+   <a href="locate us.html"> Shop</a>
+   <a href="contact.html"> Contact</a>
+  </nav>
+</header>
+
+<div id="container">
+  <div id="branch-list">
+    <h3>Click a Branch:</h3>
+    <!-- Branch list will be injected here -->
+  </div>
+  <div id="map"></div>
+</div>
+
+<script>
+  // Example branches — you can add more here
+  const branches = [
+    {
+      name: "Vida e Caffè - Rosebank",
+      lat: -26.1458,
+      lng: 28.0419
+    },
+    {
+      name: "Vida e Caffè - Sandton City",
+      lat: -26.1087,
+      lng: 28.0567
+    },
+    {
+      name: "Vida e Caffè - Melville",
+      lat: -26.1795,
+      lng: 28.0084
+    }
+  ];
+
+  let map;
+  let markers = [];
+
+  function initMap() {
+    const centerPoint = { lat: -26.2041, lng: 28.0473 }; // Johannesburg
+
+    map = new google.maps.Map(document.getElementById("map"), {
+      zoom: 12,
+      center: centerPoint
+    });
+
+    const listContainer = document.getElementById("branch-list");
+
+    branches.forEach((branch, index) => {
+      // Add marker
+      const marker = new google.maps.Marker({
+        position: { lat: branch.lat, lng: branch.lng },
+        map,
+        title: branch.name
+      });
+      markers.push(marker);
+
+      // Add to list
+      const item = document.createElement("div");
+      item.className = "branch-item";
+      item.textContent = branch.name;
+      item.addEventListener("click", () => {
+        map.panTo(marker.getPosition());
+        map.setZoom(15);
+        const infowindow = new google.maps.InfoWindow({
+          content: `<strong>${branch.name}</strong>`
+        });
+        infowindow.open(map, marker);
+      });
+      listContainer.appendChild(item);
+    });
+  }
+</script>
+
+<!-- Replace YOUR_API_KEY with your actual Google Maps API key -->
+<script
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCSzkdeW98L5ZhL8xDrFcSK3TtVSQl3iXA&libraries=places&callback=initMap"
+  async defer>
+</script>
+
+</body>
+</html>

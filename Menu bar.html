@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menu</title>
+  <script 
+  src="https://www.paypal.com/sdk/js?client-id=ARaSNJ2HcdHuuKe-bTrazzBdApMW4gNljgmC6kIM742-jvUBAI49ke3Ie-hF3k8qR9Kra6YPN1SvIQ51&currency=USD"></script>
+  <style>
+  body{
+    margin: 0;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    background: #b14a4a;
+  } 
+  header{
+    background:rgba(0, 0,0 ,1);
+    color: #b14a4a;
+    padding: 20px;
+    text-align: center;
+   font-size: 30px;
+  } 
+
+  .container{
+    display: flex;
+    padding: 20px;
+  }
+  #paypal-button-container{
+    margin-top: 20px;
+  }
+  .products{
+    background: #fff;
+    flex: 3;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+    gap: 20px;
+    padding-right: 20px;
+  }
+  .product{
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px 
+    rgba(0, 0, 0 , 1);
+    padding: 16px;
+    text-align: center;
+  }
+  .product img{
+    width: 100%;
+    border-radius: 6px;
+  }
+  .product h3{
+    margin: 10px 0 5px ;
+  }
+  .product p {
+    color: #666;
+    font-size: 14px;
+  }
+  .price{
+    font-weight: bold;
+    margin: 10px 0;
+  }
+.btn{
+  background: #111;
+  color: white;
+  padding: 10px 15px ;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-size: 14px;
+}
+nav a{
+  color: #666;
+  text-decoration: none;
+  font-weight: bold;
+}
+.cart{
+  flex: 1;
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 6px
+  rgba(0, 0, 0, 1);
+  max-height: 500px;
+  overflow-y: auto;
+}
+.cart h2{
+  margin-top: 0;
+  font-size: 20px;
+}
+.cart-item{
+border-bottom: 1px solid #eee;
+padding: 10px 0;
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+.cart-item button{
+  background: red;
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+</style>
+</head>
+<body>
+ <header> Vida e Caffe- Coffee Shop Menu
+   <nav>
+   <a href="Caffe` vivo.html"> Home</a> 
+   <a href="Menu bar.html"> Menu</a>
+   <a href="locate us.html"> Shop</a>
+   <a href="contact.html"> Contact</a>
+  </nav>
+ </header> 
+  
+  
+ <div class="container">
+  <div class="products">
+    <div class="product" >
+      <img src="es1.jpg" >
+      <h3>Espresso</h3>
+      <p> Strong and bold espresso shot</p>
+      <div class="price"
+      data-price="39.00">R39.00</div>
+      <button class="btn" onclick="addToCart('Espresso',39.00)">Add to Cart</button>
+    </div>
+
+    <div class="product">
+      <img src="l1.jpg">
+      <h3>Chai Latte</h3>
+      <p>Creamy steamed milk with espresso</p>
+      <div class="price"
+      data-price="37.00">R37.00</div>
+      <button class="btn" onclick="addToCart('Chai latte',37.00)">Add to cart</button>
+    </div>
+
+    <div class="product">
+      <img src="g1.jpg">
+      <h3> Gelado</h3>
+      <p>Our Signature iced coffee blended with milk,ice and vanilla </p>
+      <div class="price"
+      data-price="49.00">R49.oo</div>
+      <button class="btn" onclick="addToCart('Gelado',49.00)" >Add to cart</button>
+    </div>
+  </div>
+
+  <div class="cart">
+    <h2>Your Cart</h2>
+    <div id="cart-item"></div>
+    <hr/>
+    <p><strong>Total:R<span 
+    id="total">0.00</span></strong></p>
+    <button class="btn" onclick="checkout()">Checkout</button>
+  </div>
+ </div>
+ <div id="paypal-button-container"></div>
+
+ <script>
+  let cart=[];
+
+  function addToCart(name,price) {
+    cart.push({name , price});
+    updateCart();
+  }
+
+  function removeFromCart(index) {
+    cart.splice(index,1);
+    updateCart();
+  }
+
+  function updateCart() {
+const cartContainer=
+document.getElementById("cart-item");
+const totalDisplay =
+document.getElementById("total");
+cartContainer.innerHTML="";
+let total=0
+
+cart.forEach((item, index) => {
+  total += item.price;
+  const div =
+  document.createElement("div");
+  div.className="cart-item";
+  div.innerHTML= ` ${item.name}-$${item.price.toFixed(2)} 
+  <button
+  onclick="removeFromCart(${index})">X</button>
+  `;
+  cartContainer.appendChild(div);
+});
+totalDisplay.textContent=total.toFixed(2);
+  }
+  function checkout(){
+    if (cart.length===0){
+      alert ("Your Cart id empty");
+    } else{
+      alert("Checkout is Complete,Thank you for your order!");
+      cart=[]
+      updateCart();
+    }
+  }
+
+  function renderPayPalButton(){
+    const total=cart.reduce((sum,
+    item)=>sum + item.price,
+  0).toFixed(2);
+  
+  document.getElementById('paypal-button-container').innerHTML='';
+   //clear previous button
+   paypal.Buttons({
+    createOrder:function(data,
+    actions) {
+    return actions.order.create({
+      purchase_units:[{
+       amount:{
+        value:total
+       } 
+      }]
+    });
+    },
+    onApprove:function(data,actions)
+{
+  return
+  actions.order.capture().then(function(details) {
+    alert ('Thank you,'+ details.payer.name.given_name+ '! Your order has been placed.');
+    cart=[];
+    updateCart();
+    document.getElementById('paypal-button-container').innerHTML='';
+  });
+  },
+  onerror:function(err){
+    console.error('Paypal Checkout error',err);
+    alert ('Payment failed.Please try again ');
+  }
+ }).render('#paypal-button-container'
+ );
+  }
+
+ function checkout(){
+  if (cart.length===0){
+    alert ("Your cart is empty!");
+  } else{
+    renderPayPalButton();
+  }
+ }
+ </script>
+</body>
+</html>

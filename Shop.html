@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Find a Vida e Caffè near You</title>
+  <style>
+    #map {
+      height: 500px;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Find Vida e Caffè Near You</h2>
+<div id="map"></div>
+
+<script>
+  function initMap() {
+    const johannesburg = { lat: -26.2041, lng: 28.0473 };
+
+    const map = new google.maps.Map(document.getElementById("map"), {
+      center: johannesburg,
+      zoom: 14,
+    });
+
+    const request = {
+      location: johannesburg,
+      radius: '10000',
+      keyword: "Vida e Caffè"
+    };
+
+    const service = new google.maps.places.PlacesService(map);
+    service.nearbySearch(request, function (results, status) {
+      if (status === google.maps.places.PlacesServiceStatus.OK) {
+        results.forEach(function (place) {
+          new google.maps.Marker({
+            map: map,
+            position: place.geometry.location,
+            title: place.name
+          });
+        });
+      } else {
+        console.error('Places search failed: ' + status);
+        alert('Places search failed: ' + status);
+      }
+    });
+  }
+</script>
+
+<!-- ✅ Fixed API script URL -->
+<script
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCSzkdeW98L5ZhL8xDrFcSK3TtVSQl3iXA&libraries=places&callback=initMap"
+  async defer>
+</script>
+
+</body>
+</html>
